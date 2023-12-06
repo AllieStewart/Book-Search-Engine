@@ -1,3 +1,5 @@
+// Start of JS file
+// Main server file for launching the back-end.
 const express = require('express');
 const { ApolloServer } = require('@apollo/server');
 const { expressMiddleware } = require('@apollo/server/express4');
@@ -38,3 +40,4 @@ db.once('open', () => {
 };
 
 startApolloServer();
+// End of JS file
