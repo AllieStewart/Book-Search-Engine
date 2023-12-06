@@ -1,3 +1,5 @@
+// Start of JSX file
+// Main file in which front-end is launched.
 import ReactDOM from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -26,3 +28,4 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root')).render(
   <RouterProvider router={router} />
 )
+// End of JSX file
