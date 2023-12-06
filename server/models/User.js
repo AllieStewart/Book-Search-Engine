@@ -1,3 +1,6 @@
+// Start of JS file
+// User schema; includes password hashing, password validation,
+// and importing book schema for the User's savedBooks [].
 const { Schema, model } = require('mongoose');
 const bcrypt = require('bcrypt');
 
@@ -55,3 +58,4 @@ userSchema.virtual('bookCount').get(function () {
 const User = model('User', userSchema);
 
 module.exports = User;
+// End of JS file
