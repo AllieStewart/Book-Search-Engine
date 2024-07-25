@@ -1,6 +1,6 @@
 // Start of JS file
 // Resolvers for establishing Query and Mutation.
-const { User, Book } = require('../models');
+const { User } = require('../models');
 const { signToken, AuthenticationError } = require('../utils/auth');
 
 const resolvers = {
@@ -38,18 +38,21 @@ const resolvers = {
         },
         saveBook: async (parent, { authors, description, title, bookId, image, link }) => {
             if (context.user) {
-                const book = await Book.create({
-                    authors,
-                    description,
-                    title,
-                    bookId,
-                    image,
-                    link,
+                const book = await User.create({
+                    savedBooks:
+                    [
+                        authors,
+                        description,
+                        title,
+                        bookId,
+                        image,
+                        link
+                    ],
                 });
 
-                await Book.findOneandUpdate(
+                await User.findOneandUpdate(
                     { _id: context.user._id },
-                    { $addToSet: { books: book._id }}
+                    { $addToSet: { savedBooks: book._id }}
                 );
 
                 return book;
@@ -58,14 +61,14 @@ const resolvers = {
         },
         removeBook: async (parent, { bookId }) => {
             if (context.user){
-                const book = Book.findOneandDelete({
+                const book = User.findOneandDelete({
                     _id: bookId,
                     authors, description, title, image, link,
                 });
 
-                await Book.findOneAndUpdate(
+                await User.findOneAndUpdate(
                     { _id: context.user._id },
-                    { $pull: { books: book._id } }
+                    { $pull: { savedBooks: book._id } }
                 );
                 
                 return book;

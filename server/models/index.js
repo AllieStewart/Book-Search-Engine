@@ -1,7 +1,6 @@
 // Start of JS file
 // Index file for User export.
 const User = require('./User');
-const Book = require('./Book');
 
-module.exports = { User, Book };
+module.exports = { User };
 // End of JS file
