@@ -37,10 +37,40 @@ const resolvers = {
             return { token, user };
         },
         saveBook: async (parent, { authors, description, title, bookId, image, link }) => {
-            // return User
+            if (context.user) {
+                const book = await Book.create({
+                    authors,
+                    description,
+                    title,
+                    bookId,
+                    image,
+                    link,
+                });
+
+                await Book.findOneandUpdate(
+                    { _id: context.user._id },
+                    { $addToSet: { books: book._id }}
+                );
+
+                return book;
+            }
+            throw AuthenticationError;
         },
         removeBook: async (parent, { bookId }) => {
-            // return User
+            if (context.user){
+                const book = Book.findOneandDelete({
+                    _id: bookId,
+                    authors, description, title, image, link,
+                });
+
+                await Book.findOneAndUpdate(
+                    { _id: context.user._id },
+                    { $pull: { books: book._id } }
+                );
+                
+                return book;
+            }
+            throw AuthenticationError;
         },
     },
 };

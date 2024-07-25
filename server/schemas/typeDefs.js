@@ -33,5 +33,7 @@ const typeDefs = `
         saveBook(authors: [authors], description: String, title: String, bookId: ID, image: String, link: String): User
         removeBook(bookId: ID): User
     }
-`
+`;
+
+module.exports = typeDefs;
 // End of JS file
