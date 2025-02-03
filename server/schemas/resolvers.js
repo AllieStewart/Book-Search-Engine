@@ -36,42 +36,27 @@ const resolvers = {
             const token = signToken(user);
             return { token, user };
         },
-        saveBook: async (parent, { authors, description, title, bookId, image, link }) => {
+        saveBook: async (parent, { authors, description, title, bookId, image, link }, context) => {
             if (context.user) {
-                const book = await User.create({
-                    savedBooks:
-                    [
-                        authors,
-                        description,
-                        title,
-                        bookId,
-                        image,
-                        link
-                    ],
-                });
-
-                await User.findOneandUpdate(
+                // Directly update the user's savedBooks array
+                const updatedUser = await User.findOneAndUpdate(
                     { _id: context.user._id },
-                    { $addToSet: { savedBooks: book._id }}
+                    { $addToSet: { savedBooks: { authors, description, title, bookId, image, link } } },
+                    { new: true, runValidators: true }
                 );
-
-                return book;
+                return updatedUser; // Return the user with updated books
             }
             throw AuthenticationError;
         },
-        removeBook: async (parent, { bookId }) => {
-            if (context.user){
-                const book = User.findOneandDelete({
-                    _id: bookId,
-                    authors, description, title, image, link,
-                });
-
-                await User.findOneAndUpdate(
+        removeBook: async (parent, { bookId }, context) => {
+            if (context.user) {
+                // Remove the book from the user's savedBooks array
+                const updatedUser = await User.findOneAndUpdate(
                     { _id: context.user._id },
-                    { $pull: { savedBooks: book._id } }
+                    { $pull: { 'savedBooks': { bookId: bookId } } },
+                    { new: true }
                 );
-                
-                return book;
+                return updatedUser; // Return updated user
             }
             throw AuthenticationError;
         },
